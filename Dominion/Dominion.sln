@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DominionServer", "DominionServer\DominionServer.csproj", "{13DA0B49-5B9F-48D7-9241-B6C31B16D263}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DominionClient", "DominionClient\DominionClient.csproj", "{9D0BD6E4-A2DF-418D-B78F-FC76DD72BD84}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DServer", "DServer\DServer.csproj", "{E96F4855-F20A-47EC-986A-B3E4EA20040D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{13DA0B49-5B9F-48D7-9241-B6C31B16D263}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{13DA0B49-5B9F-48D7-9241-B6C31B16D263}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{13DA0B49-5B9F-48D7-9241-B6C31B16D263}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{13DA0B49-5B9F-48D7-9241-B6C31B16D263}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9D0BD6E4-A2DF-418D-B78F-FC76DD72BD84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9D0BD6E4-A2DF-418D-B78F-FC76DD72BD84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D0BD6E4-A2DF-418D-B78F-FC76DD72BD84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D0BD6E4-A2DF-418D-B78F-FC76DD72BD84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E96F4855-F20A-47EC-986A-B3E4EA20040D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E96F4855-F20A-47EC-986A-B3E4EA20040D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E96F4855-F20A-47EC-986A-B3E4EA20040D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E96F4855-F20A-47EC-986A-B3E4EA20040D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
