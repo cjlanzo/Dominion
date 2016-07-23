@@ -1,4 +1,4 @@
-﻿namespace DominionClient
+﻿namespace DominionClient.Screens
 {
 	partial class fmLogin
 	{

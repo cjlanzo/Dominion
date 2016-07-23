@@ -1,6 +1,6 @@
-﻿namespace DominionClient
+﻿namespace DominionClient.Screens
 {
-	partial class Lobby
+	partial class fmLobby
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -52,7 +52,7 @@
 			this.lvwPlayers.TabIndex = 1;
 			this.lvwPlayers.UseCompatibleStateImageBehavior = false;
 			// 
-			// Lobby
+			// fmLobby
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -61,7 +61,7 @@
 			this.Controls.Add(this.btnReady);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.MaximizeBox = false;
-			this.Name = "Lobby";
+			this.Name = "fmLobby";
 			this.ShowIcon = false;
 			this.Text = "LobbyScreen";
 			this.ResumeLayout(false);

@@ -1,6 +1,6 @@
-﻿namespace DominionClient
+﻿namespace DominionClient.Screens
 {
-	partial class GameClient
+	partial class fmGameClient
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -41,15 +41,18 @@
 			this.Send.UseVisualStyleBackColor = true;
 			this.Send.Click += new System.EventHandler(this.Send_Click);
 			// 
-			// GUI
+			// fmGameClient
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(822, 590);
 			this.Controls.Add(this.Send);
-			this.Name = "GUI";
-			this.Text = "Form1";
-			this.Load += new System.EventHandler(this.GUI_Load);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			this.MinimizeBox = false;
+			this.Name = "fmGameClient";
+			this.ShowIcon = false;
+			this.Text = "GameClient";
+			this.Load += new System.EventHandler(this.fmGameClient_Load);
 			this.ResumeLayout(false);
 
 		}

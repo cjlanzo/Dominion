@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Windows.Forms;
+using DominionClient.Events;
 
-namespace DominionClient
+namespace DominionClient.Screens
 {
 	public partial class fmLogin : Form
 	{
-		public string Username { get; set; }
+		public delegate void LoginHandler(object sender, LoginEvent e);
+		public event LoginHandler OnLogin;
 
 		public fmLogin()
 		{
@@ -14,9 +16,17 @@ namespace DominionClient
 
 		private void btnLogin_Click(object sender, EventArgs e)
 		{
-			Username = rtfUsername.Text;
+			if (OnLogin == null)
+			{
+				return;
+			}
+
+			LoginEvent loginEvent = new LoginEvent(rtfUsername.Text);
+
+			OnLogin(this, loginEvent);
+
 			//rtfUsername.Enabled = false;
-			//Close();
+			Close();
 
 		}
 

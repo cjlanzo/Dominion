@@ -24,16 +24,23 @@ namespace DServer
 				Console.WriteLine(@"Waiting for a connection...");
 				while (true)
 				{
-					Socket socket = tcpListener.AcceptSocket();
-
-					Console.WriteLine($"Connection accepted from {socket.RemoteEndPoint}");
-
-					//ManageConnection(socket);
-					Thread thread = new Thread(() =>
+					try
 					{
-						ManageConnection(socket);
-					});
-					thread.Start();
+						Socket socket = tcpListener.AcceptSocket();
+
+						Console.WriteLine($"Connection accepted from {socket.RemoteEndPoint}");
+
+						//ManageConnection(socket);
+						Thread thread = new Thread(() =>
+						{
+							ManageConnection(socket);
+						});
+						thread.Start();
+					}
+					catch (Exception)
+					{
+						Console.WriteLine("User left");
+					}
 				}
 			}
 			catch (Exception e)
@@ -60,21 +67,29 @@ namespace DServer
 		{
 			while (true)
 			{
-				byte[] bytes = new byte[100];
-				int k = socket.Receive(bytes);
-
-				Console.WriteLine(@"Received...");
-
-				for (int i = 0; i < k; i++)
+				try
 				{
-					Console.Write(Convert.ToChar(bytes[i]));
+					byte[] bytes = new byte[100];
+					int k = socket.Receive(bytes);
+
+					Console.WriteLine(@"Received...");
+
+					for (int i = 0; i < k; i++)
+					{
+						Console.Write(Convert.ToChar(bytes[i]));
+					}
+
+					ASCIIEncoding asen = new ASCIIEncoding();
+					socket.Send(asen.GetBytes(@"The string was received by the server."));
+
+					Console.WriteLine("\nSent Acknowledgement");
 				}
+				catch (Exception e)
+				{
+					Console.WriteLine(e.StackTrace);
 
-				ASCIIEncoding asen = new ASCIIEncoding();
-				socket.Send(asen.GetBytes(@"The string was received by the server."));
-
-				Console.WriteLine("\nSent Acknowledgement");
-
+					throw e;
+				}
 			}
 		}
 		#endregion Private Methods
