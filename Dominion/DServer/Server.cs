@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -7,15 +8,14 @@ namespace DServer
 {
 	public static class Server
 	{
+		#region Main
 		public static void Main()
 		{
-			const string ip = "10.0.0.25";
 			const int port = 8001;
 
 			try
 			{
-				IPAddress ipAddress = IPAddress.Parse(ip);
-				TcpListener tcpListener = new TcpListener(ipAddress, port);
+				TcpListener tcpListener = new TcpListener(GetLocalIPAddress(), port);
 				tcpListener.Start();
 
 				Console.WriteLine($"The server is running at port {port}");
@@ -24,12 +24,10 @@ namespace DServer
 
 				Socket socket = tcpListener.AcceptSocket();
 
+				Console.WriteLine($"Connection accepted from {socket.RemoteEndPoint}");
+
 				while (true)
 				{
-					
-
-					Console.WriteLine($"Connection accepted from {socket.RemoteEndPoint}");
-
 					byte[] bytes = new byte[100];
 					int k = socket.Receive(bytes);
 
@@ -43,7 +41,7 @@ namespace DServer
 					ASCIIEncoding asen = new ASCIIEncoding();
 					socket.Send(asen.GetBytes(@"The string was received by the server."));
 
-					Console.WriteLine(@"\nSent Acknowledgement");
+					Console.WriteLine("\nSent Acknowledgement");
 				}
 				
 
@@ -55,5 +53,20 @@ namespace DServer
 				Console.WriteLine(e.StackTrace);
 			}
 		}
+		#endregion Main
+
+		#region Private Methods
+		private static IPAddress GetLocalIPAddress()
+		{
+			if (!System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
+			{
+				return null;
+			}
+
+			IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
+
+			return host.AddressList.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork);
+		}
+		#endregion Private Methods
 	}
 }

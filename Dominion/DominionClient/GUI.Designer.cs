@@ -1,4 +1,6 @@
-﻿namespace DominionClient
+﻿using System.Net.Sockets;
+
+namespace DominionClient
 {
 	partial class GUI
 	{
@@ -50,8 +52,6 @@
 			this.Name = "Form1";
 			this.Text = "Form1";
 			this.ResumeLayout(false);
-
-
 		}
 
 		#endregion
@@ -59,4 +59,3 @@
 		private System.Windows.Forms.Button Send;
 	}
 }
-
