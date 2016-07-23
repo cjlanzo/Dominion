@@ -16,7 +16,6 @@ namespace DominionClient
 		{
 			Username = rtfUsername.Text;
 			//rtfUsername.Enabled = false;
-			this.Visible = false;
 			//Close();
 
 		}
