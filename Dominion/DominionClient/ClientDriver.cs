@@ -33,7 +33,7 @@ namespace DominionClient
 
 			//loginScreen.
 
-			while (loginScreen.Visible)
+			while (string.IsNullOrEmpty(loginScreen.Username))
 			{
 				Thread.Sleep(1000);
 			}
