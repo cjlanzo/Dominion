@@ -1,6 +1,4 @@
-﻿using System.Net.Sockets;
-
-namespace DominionClient
+﻿namespace DominionClient
 {
 	partial class GUI
 	{
