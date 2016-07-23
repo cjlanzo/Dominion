@@ -1,17 +1,25 @@
 ﻿using System;
+using System.IO;
+using System.Text;
 using System.Windows.Forms;
 
 namespace DominionClient
 {
-	public static class Client
+	public static class ClientDriver
 	{
+		#region Main
 		[STAThread]
 		public static void Main()
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			//Application.Run(new GUI());
-			Application.Run(new fmLobby());
+
+			//Application.Run(new fmLogin());
+
+			Application.Run(new GameClient());
+
+
 		}
+		#endregion Main
 	}
 }

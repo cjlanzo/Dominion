@@ -1,6 +1,6 @@
 ﻿namespace DominionClient
 {
-	partial class GUI
+	partial class GameClient
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -41,15 +41,17 @@
 			this.Send.UseVisualStyleBackColor = true;
 			this.Send.Click += new System.EventHandler(this.Send_Click);
 			// 
-			// Form1
+			// GUI
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(822, 590);
 			this.Controls.Add(this.Send);
-			this.Name = "Form1";
+			this.Name = "GUI";
 			this.Text = "Form1";
+			this.Load += new System.EventHandler(this.GUI_Load);
 			this.ResumeLayout(false);
+
 		}
 
 		#endregion

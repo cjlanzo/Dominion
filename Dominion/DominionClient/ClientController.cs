@@ -4,25 +4,25 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Windows.Forms;
 
 namespace DominionClient
 {
-	public partial class GUI : Form
+	public class ClientController
 	{
+		#region Constants
 		const int port = 8001;
+		#endregion Constants
 
 		private TcpClient tcpClient;
 
-		public GUI()
+		public ClientController()
 		{
-			InitializeComponent();
-
 			tcpClient = new TcpClient();
-			tcpClient.Connect(GetLocalIPAddress(), port);
+			tcpClient.Connect("10.0.0.215", port);
 		}
 
-		private void Send_Click(object sender, EventArgs e)
+		#region Public Methods
+		public void TestMethod()
 		{
 			try
 			{
@@ -41,8 +41,10 @@ namespace DominionClient
 				Console.WriteLine(ex.StackTrace);
 			}
 		}
+		#endregion Public methods
 
-		private string GetLocalIPAddress()
+		#region Private Methods
+		private static string GetLocalIPAddress()
 		{
 			if (!System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
 			{
@@ -53,5 +55,6 @@ namespace DominionClient
 
 			return host.AddressList.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork)?.ToString();
 		}
+		#endregion Private Methods
 	}
 }
