@@ -10,7 +10,7 @@ namespace DominionClient
 	public class ClientController
 	{
 		#region Constants
-		const int port = 8001;
+		private const int port = 8001;
 		#endregion Constants
 
 		private TcpClient tcpClient;
@@ -22,12 +22,12 @@ namespace DominionClient
 		}
 
 		#region Public Methods
-		public void TestMethod()
+		public void TestMethod(string username)
 		{
 			try
 			{
 				////string input = Console.ReadLine();
-				string input = @"Send this please";
+				string input = $"Msg from {username}";
 
 				Stream stream = tcpClient.GetStream();
 

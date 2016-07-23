@@ -5,13 +5,19 @@ namespace DominionClient
 {
 	public partial class fmLogin : Form
 	{
+		public string Username { get; set; }
+
 		public fmLogin()
 		{
 			InitializeComponent();
 		}
 
-		private void button1_Click(object sender, EventArgs e)
+		private void btnLogin_Click(object sender, EventArgs e)
 		{
+			Username = rtfUsername.Text;
+			//rtfUsername.Enabled = false;
+			this.Visible = false;
+			//Close();
 
 		}
 

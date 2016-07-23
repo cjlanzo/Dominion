@@ -5,21 +5,24 @@ namespace DominionClient
 {
 	public partial class GameClient : Form
 	{
-		private ClientController controller;
+		private ClientController _controller;
+		private string Username;
 
-		public GameClient()
+		public GameClient(string username)
 		{
 			InitializeComponent();
+
+			Username = username;
 		}
 
 		private void Send_Click(object sender, EventArgs e)
 		{
-			controller.TestMethod();
+			_controller.TestMethod(Username);
 		}
 
 		private void GUI_Load(object sender, EventArgs e)
 		{
-			controller = new ClientController();
+			_controller = new ClientController();
 		}
 	}
 }

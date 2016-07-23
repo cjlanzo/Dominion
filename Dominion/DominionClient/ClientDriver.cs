@@ -1,6 +1,5 @@
 ﻿using System;
-using System.IO;
-using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace DominionClient
@@ -14,12 +13,37 @@ namespace DominionClient
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 
+			//fmLogin loginScreen = new fmLogin();
+			//loginScreen.Show();
 			//Application.Run(new fmLogin());
 
-			Application.Run(new GameClient());
+			string username = HandleLoginScreen();
+
+			Application.Run(new GameClient(username));
 
 
 		}
 		#endregion Main
+
+		private static string HandleLoginScreen()
+		{
+			fmLogin loginScreen = new fmLogin();
+			//loginScreen.Show();
+			Application.Run(loginScreen);
+
+			//loginScreen.
+
+			while (loginScreen.Visible)
+			{
+				Thread.Sleep(1000);
+			}
+
+			string currentUser = loginScreen.Username;
+			
+			loginScreen.Close();
+
+			return currentUser;
+
+		}
 	}
 }

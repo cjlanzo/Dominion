@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 
 namespace DServer
 {
@@ -21,32 +22,19 @@ namespace DServer
 				Console.WriteLine($"The server is running at port {port}");
 				Console.WriteLine($"The local End Point is {tcpListener.LocalEndpoint}");
 				Console.WriteLine(@"Waiting for a connection...");
-
-				Socket socket = tcpListener.AcceptSocket();
-
-				Console.WriteLine($"Connection accepted from {socket.RemoteEndPoint}");
-
 				while (true)
 				{
-					byte[] bytes = new byte[100];
-					int k = socket.Receive(bytes);
+					Socket socket = tcpListener.AcceptSocket();
 
-					Console.WriteLine(@"Received...");
+					Console.WriteLine($"Connection accepted from {socket.RemoteEndPoint}");
 
-					for (int i = 0; i < k; i++)
+					//ManageConnection(socket);
+					Thread thread = new Thread(() =>
 					{
-						Console.Write(Convert.ToChar(bytes[i]));
-					}
-
-					ASCIIEncoding asen = new ASCIIEncoding();
-					socket.Send(asen.GetBytes(@"The string was received by the server."));
-
-					Console.WriteLine("\nSent Acknowledgement");
+						ManageConnection(socket);
+					});
+					thread.Start();
 				}
-				
-
-				socket.Close();
-				tcpListener.Stop();
 			}
 			catch (Exception e)
 			{
@@ -66,6 +54,28 @@ namespace DServer
 			IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
 
 			return host.AddressList.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork);
+		}
+
+		private static void ManageConnection(Socket socket)
+		{
+			while (true)
+			{
+				byte[] bytes = new byte[100];
+				int k = socket.Receive(bytes);
+
+				Console.WriteLine(@"Received...");
+
+				for (int i = 0; i < k; i++)
+				{
+					Console.Write(Convert.ToChar(bytes[i]));
+				}
+
+				ASCIIEncoding asen = new ASCIIEncoding();
+				socket.Send(asen.GetBytes(@"The string was received by the server."));
+
+				Console.WriteLine("\nSent Acknowledgement");
+
+			}
 		}
 		#endregion Private Methods
 	}

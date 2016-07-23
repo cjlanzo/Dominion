@@ -28,18 +28,18 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.rtfUserName = new System.Windows.Forms.RichTextBox();
+			this.rtfUsername = new System.Windows.Forms.RichTextBox();
 			this.lblUsername = new System.Windows.Forms.Label();
 			this.btnLogin = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
-			// rtfUserName
+			// rtfUsername
 			// 
-			this.rtfUserName.Location = new System.Drawing.Point(86, 147);
-			this.rtfUserName.Name = "rtfUserName";
-			this.rtfUserName.Size = new System.Drawing.Size(236, 48);
-			this.rtfUserName.TabIndex = 0;
-			this.rtfUserName.Text = "";
+			this.rtfUsername.Location = new System.Drawing.Point(86, 147);
+			this.rtfUsername.Name = "rtfUsername";
+			this.rtfUsername.Size = new System.Drawing.Size(236, 48);
+			this.rtfUsername.TabIndex = 0;
+			this.rtfUsername.Text = "";
 			// 
 			// lblUsername
 			// 
@@ -58,7 +58,7 @@
 			this.btnLogin.TabIndex = 2;
 			this.btnLogin.Text = "Login";
 			this.btnLogin.UseVisualStyleBackColor = true;
-			this.btnLogin.Click += new System.EventHandler(this.button1_Click);
+			this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
 			// 
 			// fmLogin
 			// 
@@ -67,7 +67,7 @@
 			this.ClientSize = new System.Drawing.Size(424, 356);
 			this.Controls.Add(this.btnLogin);
 			this.Controls.Add(this.lblUsername);
-			this.Controls.Add(this.rtfUserName);
+			this.Controls.Add(this.rtfUsername);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.MaximizeBox = false;
 			this.Name = "fmLogin";
@@ -81,7 +81,7 @@
 
 		#endregion
 
-		private System.Windows.Forms.RichTextBox rtfUserName;
+		private System.Windows.Forms.RichTextBox rtfUsername;
 		private System.Windows.Forms.Label lblUsername;
 		private System.Windows.Forms.Button btnLogin;
 	}
