@@ -24,10 +24,7 @@ namespace DominionClient.Screens
 			LoginEvent loginEvent = new LoginEvent(rtfUsername.Text);
 
 			OnLogin(this, loginEvent);
-
-			//rtfUsername.Enabled = false;
 			Close();
-
 		}
 
 		private void LoginScreen_Load(object sender, EventArgs e)

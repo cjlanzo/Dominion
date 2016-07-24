@@ -7,7 +7,7 @@ namespace DominionClient.Screens
 	public partial class fmGameClient : Form
 	{
 		private ClientController _controller;
-		private string Username;
+		private string _username;
 
 		public fmGameClient()
 		{
@@ -16,12 +16,12 @@ namespace DominionClient.Screens
 
 		private void Send_Click(object sender, EventArgs e)
 		{
-			_controller.TestMethod(Username);
+			_controller.SendMessage($"{_username}:Chat:what's up");
 		}
 
 		private void UpdateUsername(object sender, LoginEvent e)
 		{
-			Username = e.Username;
+			_username = e.Username;
 		}
 
 		private void fmGameClient_Load(object sender, EventArgs e)
@@ -32,6 +32,15 @@ namespace DominionClient.Screens
 			loginScreen.OnLogin += UpdateUsername;
 			loginScreen.ShowDialog();
 
+			_controller.SendMessage($"{_username}:Login");
+
+			fmLobby lobbyScreen = new fmLobby();
+
+			_con
+
+			lobbyScreen.ShowDialog();
+
+			Focus();
 		}
 	}
 }

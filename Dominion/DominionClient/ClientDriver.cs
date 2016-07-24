@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Windows.Forms;
 using DominionClient.Screens;
 
@@ -13,21 +12,8 @@ namespace DominionClient
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-
-			//fmLogin loginScreen = new fmLogin();
-			//loginScreen.Show();
-			//Application.Run(new fmLogin());
-
-			//string username = HandleLoginScreen();
-			//fmGameClient gameClient = new fmGameClient();
-			//gameClient.Show();
-			//gameClient.Hide();
 			Application.Run(new fmGameClient());
-
-
-
 		}
 		#endregion Main
-
 	}
 }

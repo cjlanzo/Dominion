@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
@@ -10,51 +8,49 @@ namespace DominionClient
 	public class ClientController
 	{
 		#region Constants
-		private const int port = 8001;
+		private const int Port = 8001;
 		#endregion Constants
 
-		private TcpClient tcpClient;
+		#region Member Variables
+		private ASCIIEncoding _encoder;
+		private TcpClient _tcpClient;
+		#endregion Member Varibles
 
+		#region Properties
+		private ASCIIEncoding Encoder => _encoder ?? (_encoder = new ASCIIEncoding());
+		private TcpClient TcpClient => _tcpClient ?? (_tcpClient = new TcpClient());
+		#endregion Properties
+
+		#region Constructors
+		/// <summary>
+		/// Constructs an instance of a client controller
+		/// </summary>
 		public ClientController()
 		{
-			tcpClient = new TcpClient();
-			tcpClient.Connect("10.0.0.215", port);
+			TcpClient.Connect("10.0.0.215", Port);
 		}
+		#endregion Constructors
 
 		#region Public Methods
-		public void TestMethod(string username)
+		/// <summary>
+		/// Sends a message from the client to the server
+		/// </summary>
+		/// <param name="message">Message to send to the server</param>
+		public void SendMessage(string message)
 		{
 			try
 			{
-				////string input = Console.ReadLine();
-				string input = $"Msg from {username}";
+				Stream stream = _tcpClient.GetStream();
 
-				Stream stream = tcpClient.GetStream();
+				byte[] bytes = Encoder.GetBytes(message);
 
-				ASCIIEncoding asen = new ASCIIEncoding();
-				byte[] ba = asen.GetBytes(input);
-
-				stream.Write(ba, 0, ba.Length);
+				stream.Write(bytes, 0, bytes.Length);
 			}
-			catch (Exception ex)
+			catch (Exception e)
 			{
-				Console.WriteLine(ex.StackTrace);
+				Console.WriteLine(e.StackTrace);
 			}
 		}
 		#endregion Public methods
-
-		#region Private Methods
-		private static string GetLocalIPAddress()
-		{
-			if (!System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
-			{
-				return null;
-			}
-
-			IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
-
-			return host.AddressList.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork)?.ToString();
-		}
-		#endregion Private Methods
 	}
 }
