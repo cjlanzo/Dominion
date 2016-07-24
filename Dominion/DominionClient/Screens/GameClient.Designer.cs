@@ -28,25 +28,25 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.Send = new System.Windows.Forms.Button();
+			this.btnSend = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
-			// Send
+			// btnSend
 			// 
-			this.Send.Location = new System.Drawing.Point(147, 96);
-			this.Send.Name = "Send";
-			this.Send.Size = new System.Drawing.Size(426, 109);
-			this.Send.TabIndex = 0;
-			this.Send.Text = "Send";
-			this.Send.UseVisualStyleBackColor = true;
-			this.Send.Click += new System.EventHandler(this.Send_Click);
+			this.btnSend.Location = new System.Drawing.Point(147, 96);
+			this.btnSend.Name = "btnSend";
+			this.btnSend.Size = new System.Drawing.Size(426, 109);
+			this.btnSend.TabIndex = 0;
+			this.btnSend.Text = "Send";
+			this.btnSend.UseVisualStyleBackColor = true;
+			this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
 			// 
 			// fmGameClient
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(822, 590);
-			this.Controls.Add(this.Send);
+			this.Controls.Add(this.btnSend);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.MinimizeBox = false;
 			this.Name = "fmGameClient";
@@ -59,6 +59,6 @@
 
 		#endregion
 
-		private System.Windows.Forms.Button Send;
+		private System.Windows.Forms.Button btnSend;
 	}
 }
