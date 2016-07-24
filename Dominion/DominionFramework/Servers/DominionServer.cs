@@ -1,20 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using System.Threading;
+using DominionFramework.Commands;
 using DominionFramework.Listeners;
-using DominionFramework.Threads;
+using DominionFramework.Utilities;
 
 namespace DominionFramework.Servers
 {
 	public class DominionServer : IDominionServer
 	{
 		#region Member Variables
-		private List<TcpClient> _connectedClients;
+		private Dictionary<string, TcpClient> _connectedClients;
+		//private List<TcpClient> _connectedClients;
 		private IListener _listener;
 		#endregion Member Variables
 
 		#region Properties
-		private List<TcpClient> ConnectedClients => _connectedClients ?? (_connectedClients = new List<TcpClient>());
+		private Dictionary<string, TcpClient> ConnectedClients => _connectedClients ?? (_connectedClients = new Dictionary<string, TcpClient>());
+		//private List<TcpClient> ConnectedClients => _connectedClients ?? (_connectedClients = new List<TcpClient>());
 		private IListener Listener => _listener ?? (_listener = new Listener());
 		#endregion Properties
 
@@ -29,16 +33,13 @@ namespace DominionFramework.Servers
 		}
 
 		/// <summary>
-		/// Runs the server indefinitely
+		/// Runs the server 
 		/// </summary>
 		public void Run()
 		{
-			while (true)
-			{
-				TcpClient client = Listener.ListenForClient();
-				ConnectedClients.Add(client);
-				ManageClient(client);
-			}
+			TcpClient client = Listener.ListenForClient();
+			ConnectedClients.Add(client.GetHashCode().ToString(), client);
+			ManageClient(client);
 		}
 
 		/// <summary>
@@ -59,8 +60,48 @@ namespace DominionFramework.Servers
 		/// <param name="client">The client connection to manage</param>
 		private void ManageClient(TcpClient client)
 		{
-			ServerThread thread = new ServerThread();
-			thread.Start(client);
+			ThreadStart starter = () =>
+			{
+				while (true)
+				{
+					byte[] buffer = new byte[100];
+
+					NetworkStream stream = client.GetStream();
+
+					if (stream.Read(buffer, 0, buffer.Length) == 0)
+					{
+						Console.WriteLine("Closing connection, no bytes received");
+						stream.Close();
+						client.Close();
+						break;
+					}
+
+					Command command = new Command(buffer.ConvertToString());
+
+					if (command.Action != "Logout")
+					{
+						continue;
+					}
+
+					stream.Close();
+					client.Close();
+					break;
+				}
+			};
+			starter += () =>
+			{
+				ConnectedClients.Remove(client.GetHashCode().ToString());
+
+				Console.WriteLine("Connected clients:");
+
+				foreach (string clientHash in ConnectedClients.Keys)
+				{
+					Console.WriteLine(clientHash);
+				}
+			};
+
+			Thread thread = new Thread(starter) { IsBackground = true };
+			thread.Start();
 		}
 		#endregion Private Methods
 	}

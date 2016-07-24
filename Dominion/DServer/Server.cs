@@ -12,7 +12,11 @@ namespace DServer
 		{
 			DominionServer server = new DominionServer();
 			server.Start();
-			server.Run();
+
+			while (true)
+			{
+				server.Run();
+			}
 		}
 		#endregion Main
 	}
