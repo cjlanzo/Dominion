@@ -41,6 +41,7 @@
 			this.btnReady.TabIndex = 0;
 			this.btnReady.Text = "Ready";
 			this.btnReady.UseVisualStyleBackColor = true;
+			this.btnReady.Click += new System.EventHandler(this.btnReady_Click);
 			// 
 			// lvwPlayers
 			// 
@@ -64,6 +65,7 @@
 			this.Name = "fmLobby";
 			this.ShowIcon = false;
 			this.Text = "LobbyScreen";
+			this.Load += new System.EventHandler(this.fmLobby_Load);
 			this.ResumeLayout(false);
 
 		}

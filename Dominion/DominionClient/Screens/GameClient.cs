@@ -6,41 +6,64 @@ namespace DominionClient.Screens
 {
 	public partial class fmGameClient : Form
 	{
+		#region Member Variables
 		private ClientController _controller;
-		private string _username;
+		#endregion Member Variables
 
+		#region Properties
+		private ClientController Controller => _controller ?? (_controller = new ClientController());
+		private string Username { get; set; }
+		#endregion Properties
+
+		#region Constructors
+		/// <summary>
+		/// Constructs an instance of a Game Client
+		/// </summary>
 		public fmGameClient()
 		{
 			InitializeComponent();
 		}
+		#endregion Constructors
 
-		private void Send_Click(object sender, EventArgs e)
+		#region Event Handlers
+		/// <summary>
+		/// Handles the send button being clicked
+		/// </summary>
+		/// <param name="sender">Sender</param>
+		/// <param name="e">Event arguments</param>
+		private void btnSend_Click(object sender, EventArgs e)
 		{
-			_controller.SendMessage($"{_username}:Chat:what's up");
+			Controller.SendMessage($"{Username}:Chat:what's up");
 		}
 
-		private void UpdateUsername(object sender, LoginEvent e)
-		{
-			_username = e.Username;
-		}
-
+		/// <summary>
+		/// Runs when the game client is launched
+		/// </summary>
+		/// <param name="sender">Sender</param>
+		/// <param name="e">Event arguments</param>
 		private void fmGameClient_Load(object sender, EventArgs e)
 		{
-			_controller = new ClientController();
-
 			fmLogin loginScreen = new fmLogin();
 			loginScreen.OnLogin += UpdateUsername;
 			loginScreen.ShowDialog();
 
-			_controller.SendMessage($"{_username}:Login");
+			Controller.SendMessage($"{Username}:Login");
 
 			fmLobby lobbyScreen = new fmLobby();
-
-			_con
-
 			lobbyScreen.ShowDialog();
 
 			Focus();
 		}
+
+		/// <summary>
+		/// Updates the username field
+		/// </summary>
+		/// <param name="sender">Sender</param>
+		/// <param name="e">Event arguments</param>
+		private void UpdateUsername(object sender, LoginEvent e)
+		{
+			Username = e.Username;
+		}
+		#endregion Event Handlers
 	}
 }

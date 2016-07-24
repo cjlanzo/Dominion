@@ -73,7 +73,7 @@
 			this.Name = "fmLogin";
 			this.ShowIcon = false;
 			this.Text = "LoginScreen";
-			this.Load += new System.EventHandler(this.LoginScreen_Load);
+			this.Load += new System.EventHandler(this.fmLogin_Load);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

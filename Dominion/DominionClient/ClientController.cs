@@ -27,7 +27,7 @@ namespace DominionClient
 		/// </summary>
 		public ClientController()
 		{
-			TcpClient.Connect("10.0.0.215", Port);
+			TcpClient.Connect("10.0.0.25", Port);
 		}
 		#endregion Constructors
 
