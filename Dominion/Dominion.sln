@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DominionClient", "DominionC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DServer", "DServer\DServer.csproj", "{E96F4855-F20A-47EC-986A-B3E4EA20040D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DominionFramework", "DominionFramework\DominionFramework.csproj", "{A05DBC9E-4EE0-449F-8CC6-BDB539E29490}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{E96F4855-F20A-47EC-986A-B3E4EA20040D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E96F4855-F20A-47EC-986A-B3E4EA20040D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E96F4855-F20A-47EC-986A-B3E4EA20040D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A05DBC9E-4EE0-449F-8CC6-BDB539E29490}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A05DBC9E-4EE0-449F-8CC6-BDB539E29490}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A05DBC9E-4EE0-449F-8CC6-BDB539E29490}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A05DBC9E-4EE0-449F-8CC6-BDB539E29490}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

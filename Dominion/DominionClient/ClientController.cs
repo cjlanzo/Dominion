@@ -40,7 +40,7 @@ namespace DominionClient
 		{
 			try
 			{
-				Stream stream = TcpClient.GetStream();
+				NetworkStream stream = TcpClient.GetStream();
 
 				byte[] bytes = Encoder.GetBytes(message);
 

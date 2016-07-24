@@ -42,11 +42,6 @@
 			this.btnSend.UseVisualStyleBackColor = true;
 			this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
 			// 
-			// Listener
-			// 
-			this.Listener.WorkerReportsProgress = true;
-			this.Listener.DoWork += new System.ComponentModel.DoWorkEventHandler(this.Listener_DoWork);
-			// 
 			// fmGameClient
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -58,6 +53,7 @@
 			this.Name = "fmGameClient";
 			this.ShowIcon = false;
 			this.Text = "GameClient";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.fmGameClient_FormClosing);
 			this.Load += new System.EventHandler(this.fmGameClient_Load);
 			this.ResumeLayout(false);
 

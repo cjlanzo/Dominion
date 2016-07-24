@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Windows.Forms;
 using DominionClient.Events;
 
@@ -28,6 +27,8 @@ namespace DominionClient.Screens
 		public fmGameClient()
 		{
 			InitializeComponent();
+
+			FormClosing += fmGameClient_FormClosing;
 		}
 		#endregion Constructors
 
@@ -131,22 +132,27 @@ namespace DominionClient.Screens
 					break;
 			}
 		}
+
+		private void fmGameClient_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			Controller.SendMessage($"{Username}:Logout");
+		}
 		#endregion Helper Methods
 
-		private void Listener_DoWork(object sender, DoWorkEventArgs e)
-		{
-			byte[] bytes = new byte[100];
+		//private void Listener_DoWork(object sender, DoWorkEventArgs e)
+		//{
+		//	byte[] bytes = new byte[100];
 
-			int bytesReceived = Controller.TcpClient.GetStream().Read(bytes, 0, bytes.Length);
+		//	int bytesReceived = Controller.TcpClient.GetStream().Read(bytes, 0, bytes.Length);
 
-			Message = ConvertBytesToString(bytes, bytesReceived);
+		//	Message = ConvertBytesToString(bytes, bytesReceived);
 
-			Listener.ReportProgress(100);
-		}
+		//	Listener.ReportProgress(100);
+		//}
 
-		private void Listener_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-		{
-			ParseMessage();
-		}
+		//private void Listener_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+		//{
+		//	ParseMessage();
+		//}
 	}
 }
