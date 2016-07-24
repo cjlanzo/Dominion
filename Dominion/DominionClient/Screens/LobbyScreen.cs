@@ -34,6 +34,19 @@ namespace DominionClient.Screens
 		{
 
 		}
+
+		private void lvwPlayers_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+
+		}
+
+		public void UpdatePlayersList(string name, bool ready)
+		{
+			ListViewItem player = new ListViewItem(name);
+			player.SubItems.Add(name);
+			player.SubItems.Add(ready ? "Ready" : "Not Ready");
+			lvwPlayers.Items.Add(player);
+		}
 		#endregion Event Handlers
 	}
 }

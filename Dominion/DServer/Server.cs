@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 
 namespace DServer
@@ -11,6 +13,16 @@ namespace DServer
 		#region Constants
 		private const int Port = 8001;
 		#endregion Constants
+
+		#region Member Variables
+		private static Dictionary<string, Socket> _activeSockets;
+		private static ASCIIEncoding _encoder;
+		#endregion Member Variables
+
+		#region Properties
+		private static Dictionary<string, Socket> ActiveSockets => _activeSockets ?? (_activeSockets = new Dictionary<string, Socket>());
+		private static ASCIIEncoding Encoder => _encoder ?? (_encoder = new ASCIIEncoding());
+		#endregion Properties
 
 		#region Main
 		/// <summary>
@@ -31,6 +43,8 @@ namespace DServer
 
 					Console.WriteLine($"Connection accepted from {socket.RemoteEndPoint}");
 
+					ActiveSockets.Add(socket.GetHashCode().ToString(), socket);
+
 					Thread thread = new Thread(() => { ManageClientConnection(socket); });
 					thread.Start();
 				}
@@ -43,6 +57,23 @@ namespace DServer
 		#endregion Main
 
 		#region Private Methods
+		/// <summary>
+		/// Broadcasts a message to all clients connected to the server
+		/// </summary>
+		/// <param name="mesasge">Message to broadcast</param>
+		private static void BroadcastMessage(string mesasge)
+		{
+			Thread thread = new Thread(() =>
+			{
+				foreach (Socket socket in ActiveSockets.Values)
+				{
+					byte[] bytes = Encoder.GetBytes(mesasge);
+
+					socket.Send(bytes);
+				}
+			});
+			thread.Start();
+		}
 		/// <summary>
 		/// Returns the ip address of the server
 		/// </summary>
@@ -83,6 +114,8 @@ namespace DServer
 					string message = ConvertBytesToString(bytes, bytesReceived);
 					Console.WriteLine($"Message received: {message}");
 					Console.WriteLine(ParseMessage(message));
+
+					BroadcastMessage(message);
 				}
 				catch (SocketException)
 				{
@@ -90,6 +123,12 @@ namespace DServer
 					string[] user = message.Split(':');
 
 					Console.WriteLine($"{user[0]} has disconnected from the server");
+					
+					ActiveSockets.Remove(socket.GetHashCode().ToString());
+
+					string messageToBroadcast = $"{user[0]}:Logout";
+					BroadcastMessage(messageToBroadcast);
+
 					socket.Close();
 					break;
 				}

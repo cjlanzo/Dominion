@@ -29,6 +29,7 @@
 		private void InitializeComponent()
 		{
 			this.btnSend = new System.Windows.Forms.Button();
+			this.Listener = new System.ComponentModel.BackgroundWorker();
 			this.SuspendLayout();
 			// 
 			// btnSend
@@ -40,6 +41,11 @@
 			this.btnSend.Text = "Send";
 			this.btnSend.UseVisualStyleBackColor = true;
 			this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
+			// 
+			// Listener
+			// 
+			this.Listener.WorkerReportsProgress = true;
+			this.Listener.DoWork += new System.ComponentModel.DoWorkEventHandler(this.Listener_DoWork);
 			// 
 			// fmGameClient
 			// 
@@ -60,5 +66,6 @@
 		#endregion
 
 		private System.Windows.Forms.Button btnSend;
+		private System.ComponentModel.BackgroundWorker Listener;
 	}
 }

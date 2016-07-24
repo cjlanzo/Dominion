@@ -17,8 +17,8 @@ namespace DominionClient
 		#endregion Member Varibles
 
 		#region Properties
-		private ASCIIEncoding Encoder => _encoder ?? (_encoder = new ASCIIEncoding());
-		private TcpClient TcpClient => _tcpClient ?? (_tcpClient = new TcpClient());
+		public ASCIIEncoding Encoder => _encoder ?? (_encoder = new ASCIIEncoding());
+		public TcpClient TcpClient => _tcpClient ?? (_tcpClient = new TcpClient());
 		#endregion Properties
 
 		#region Constructors
@@ -40,7 +40,7 @@ namespace DominionClient
 		{
 			try
 			{
-				Stream stream = _tcpClient.GetStream();
+				Stream stream = TcpClient.GetStream();
 
 				byte[] bytes = Encoder.GetBytes(message);
 

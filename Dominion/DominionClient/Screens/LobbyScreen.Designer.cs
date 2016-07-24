@@ -52,6 +52,7 @@
 			this.lvwPlayers.Size = new System.Drawing.Size(264, 299);
 			this.lvwPlayers.TabIndex = 1;
 			this.lvwPlayers.UseCompatibleStateImageBehavior = false;
+			this.lvwPlayers.SelectedIndexChanged += new System.EventHandler(this.lvwPlayers_SelectedIndexChanged);
 			// 
 			// fmLobby
 			// 
