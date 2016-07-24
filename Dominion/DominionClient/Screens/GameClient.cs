@@ -36,8 +36,6 @@ namespace DominionClient.Screens
 
 			fmLobby lobbyScreen = new fmLobby();
 
-			_con
-
 			lobbyScreen.ShowDialog();
 
 			Focus();
