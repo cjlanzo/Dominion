@@ -103,9 +103,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DominionFramework\DominionFramework.csproj">
-      <Project>{a05dbc9e-4ee0-449f-8cc6-bdb539e29490}</Project>
-      <Name>DominionFramework</Name>
+    <ProjectReference Include="..\DServer\DServer.csproj">
+      <Project>{e96f4855-f20a-47ec-986a-b3e4ea20040d}</Project>
+      <Name>DServer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

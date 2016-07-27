@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace DominionFramework.Loggers
+namespace DServer.Loggers
 {
 	public class Logger : ILogger
 	{

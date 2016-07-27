@@ -30,6 +30,8 @@
 		{
 			this.btnReady = new System.Windows.Forms.Button();
 			this.lvwPlayers = new System.Windows.Forms.ListView();
+			this.colUsername = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.colStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.SuspendLayout();
 			// 
 			// btnReady
@@ -46,13 +48,29 @@
 			// lvwPlayers
 			// 
 			this.lvwPlayers.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.lvwPlayers.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.colUsername,
+            this.colStatus});
+			this.lvwPlayers.Dock = System.Windows.Forms.DockStyle.Top;
 			this.lvwPlayers.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
-			this.lvwPlayers.Location = new System.Drawing.Point(12, 12);
+			this.lvwPlayers.GridLines = true;
+			this.lvwPlayers.Location = new System.Drawing.Point(0, 0);
 			this.lvwPlayers.Name = "lvwPlayers";
-			this.lvwPlayers.Size = new System.Drawing.Size(264, 299);
+			this.lvwPlayers.Size = new System.Drawing.Size(288, 299);
 			this.lvwPlayers.TabIndex = 1;
 			this.lvwPlayers.UseCompatibleStateImageBehavior = false;
-			this.lvwPlayers.SelectedIndexChanged += new System.EventHandler(this.lvwPlayers_SelectedIndexChanged);
+			this.lvwPlayers.View = System.Windows.Forms.View.Details;
+			this.lvwPlayers.ColumnWidthChanging += new System.Windows.Forms.ColumnWidthChangingEventHandler(this.lvwPlayers_ColumnWidthChanging);
+			// 
+			// colUsername
+			// 
+			this.colUsername.Text = "Username";
+			this.colUsername.Width = 144;
+			// 
+			// colStatus
+			// 
+			this.colStatus.Text = "Status";
+			this.colStatus.Width = 144;
 			// 
 			// fmLobby
 			// 
@@ -75,5 +93,7 @@
 
 		private System.Windows.Forms.Button btnReady;
 		private System.Windows.Forms.ListView lvwPlayers;
+		private System.Windows.Forms.ColumnHeader colUsername;
+		private System.Windows.Forms.ColumnHeader colStatus;
 	}
 }

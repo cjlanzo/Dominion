@@ -1,19 +1,25 @@
 ﻿using System;
+using System.Net.Sockets;
 using System.Windows.Forms;
 using DominionClient.Events;
+using DServer;
+using DServer.Clients;
+using DServer.Utilities;
 
 namespace DominionClient.Screens
 {
 	public partial class fmGameClient : Form
 	{
 		#region Member Variables
-		private ClientController _controller;
+		private ConnectedClient _client;
+		//private static GameModel _gameModel;
 		private fmLobby _lobbyScreen;
 		private fmLogin _loginScreen;
 		#endregion Member Variables
 
 		#region Properties
-		private ClientController Controller => _controller ?? (_controller = new ClientController());
+		private ConnectedClient Client => _client ?? (_client = new ConnectedClient(new TcpClient()));
+		//private static GameModel GameModel => _gameModel ?? (_gameModel = GameModel.Instance);
 		private fmLobby LobbyScreen => _lobbyScreen ?? (_lobbyScreen = new fmLobby());
 		private fmLogin LoginScreen => _loginScreen ?? (_loginScreen = new fmLogin());
 		private string Message { get; set; }
@@ -40,7 +46,7 @@ namespace DominionClient.Screens
 		/// <param name="e">Event arguments</param>
 		private void btnSend_Click(object sender, EventArgs e)
 		{
-			Controller.SendMessage($"{Username}:Chat:what's up");
+			Client.SendMessage($"{Username}:Chat:what's up");
 		}
 
 		/// <summary>
@@ -50,13 +56,25 @@ namespace DominionClient.Screens
 		/// <param name="e">Event arguments</param>
 		private void fmGameClient_Load(object sender, EventArgs e)
 		{
+			Client.Connect();
+
 			LoginScreen.OnLogin += UpdateUsername;
 			LoginScreen.ShowDialog();
 
-			Listener.RunWorkerAsync();
+			Client.SendMessage($"{Username}:Login");
 
-			Controller.SendMessage($"{Username}:Login");
+			//echo command from server - remove later
+			string message;
+			while (!Client.Read(out message))
+			{
+				
+			}
 
+			GameModel gameModel = GameModel.Acquire();
+			MessageBox.Show($"[{message}],[{gameModel.ConnectedClients.Count}]");
+			GameModel.Release();
+
+			LobbyScreen.WaitForStart(Client.TcpClient);
 			LobbyScreen.ShowDialog();
 
 			Focus();
@@ -64,13 +82,14 @@ namespace DominionClient.Screens
 
 		//private void ListenForMessages()
 		//{
+
 		//	Thread thread = new Thread(() =>
 		//	{
 		//		byte[] bytes = new byte[100];
 
-		//		Task<int> bytesReceived = Controller.TcpClient.GetStream().ReadAsync(bytes, 0, bytes.Length);
+		//		Controller.TcpClient.GetStream().Read(bytes, 0, bytes.Length);
 
-		//		string message = ConvertBytesToString(bytes, bytesReceived);
+		//		string message = bytes.ConvertToString();
 
 		//		ParseMessage(message);
 		//	});
@@ -89,53 +108,35 @@ namespace DominionClient.Screens
 		#endregion Event Handlers
 
 		#region Helper Methods
-		/// <summary>
-		/// Converts a byte array to a string
-		/// </summary>
-		/// <param name="bytes">Byte array</param>
-		/// <param name="length">Length of the byte array</param>
-		/// <returns>The byte array as a string</returns>
-		private string ConvertBytesToString(byte[] bytes, int length)
-		{
-			string s = "";
+		//private void HandleLoginMessage()
+		//{
+		//	LobbyScreen.UpdatePlayersList(GameModel.ConnectedClients);
+		//}
 
-			for (int i = 0; i < length; i++)
-			{
-				s += Convert.ToChar(bytes[i]);
-			}
+		//private void ParseMessage()
+		//{
+		//	string[] commands = Message.Split(':');
 
-			return s;
-		}
-
-		private void HandleLoginMessage(string player)
-		{
-			LobbyScreen.UpdatePlayersList(player, false);
-		}
-
-		private void ParseMessage()
-		{
-			string[] commands = Message.Split(':');
-
-			switch (commands[1])
-			{
-				case "Action":
-					break;
-				case "Chat":
-					break;
-				case "Login":
-					HandleLoginMessage(commands[0]);
-					break;
-				case "Logout":
-					break;
-				default:
-					Console.WriteLine(@"Invalid message");
-					break;
-			}
-		}
+		//	switch (commands[1])
+		//	{
+		//		case "Action":
+		//			break;
+		//		case "Chat":
+		//			break;
+		//		case "Login":
+		//			HandleLoginMessage(commands[0]);
+		//			break;
+		//		case "Logout":
+		//			break;
+		//		default:
+		//			Console.WriteLine(@"Invalid message");
+		//			break;
+		//	}
+		//}
 
 		private void fmGameClient_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			Controller.SendMessage($"{Username}:Logout");
+			Client.SendMessage($"{Username}:Logout");
 		}
 		#endregion Helper Methods
 

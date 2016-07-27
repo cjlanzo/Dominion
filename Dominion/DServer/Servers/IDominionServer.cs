@@ -1,4 +1,4 @@
-﻿namespace DominionFramework.Servers
+﻿namespace DServer.Servers
 {
 	public interface IDominionServer
 	{
@@ -11,6 +11,7 @@
 		/// <summary>
 		/// Runs the server indefinitely
 		/// </summary>
+		/// <param name="gameModel">Game Model</param>
 		void Run();
 
 		/// <summary>

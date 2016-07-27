@@ -1,4 +1,4 @@
-﻿namespace DominionFramework.Loggers
+﻿namespace DServer.Loggers
 {
 	public interface ILogger
 	{

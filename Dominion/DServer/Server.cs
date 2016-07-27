@@ -1,4 +1,4 @@
-﻿using DominionFramework.Servers;
+﻿using DServer.Servers;
 
 namespace DServer
 {
@@ -12,6 +12,8 @@ namespace DServer
 		{
 			DominionServer server = new DominionServer();
 			server.Start();
+
+			//GameModel gameModel = GameModel.Instance;
 
 			while (true)
 			{
