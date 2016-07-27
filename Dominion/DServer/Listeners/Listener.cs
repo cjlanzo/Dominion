@@ -1,9 +1,10 @@
 ﻿using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using DominionFramework.Loggers;
+using DServer.Clients;
+using DServer.Loggers;
 
-namespace DominionFramework.Listeners
+namespace DServer.Listeners
 {
 	public class Listener : IListener
 	{
@@ -34,14 +35,16 @@ namespace DominionFramework.Listeners
 		/// <summary>
 		/// Waits until it receives a TcpClient connection
 		/// </summary>
-		/// <returns>TcpClient connection</returns>
-		public TcpClient ListenForClient()
+		/// <returns>Connected client</returns>
+		public ConnectedClient ListenForClient()
 		{
 			TcpClient client = TcpListener.AcceptTcpClient();
+			ConnectedClient connectedClient = new ConnectedClient(client);
+			connectedClient.Username = connectedClient.Read();
 
 			//Logger.LogMessage($"{client} has connected to the server");
 
-			return client;
+			return connectedClient;
 		}
 
 		/// <summary>

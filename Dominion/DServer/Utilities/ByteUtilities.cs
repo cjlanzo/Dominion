@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DominionFramework.Utilities
+namespace DServer.Utilities
 {
 	public static class ByteUtilities
 	{

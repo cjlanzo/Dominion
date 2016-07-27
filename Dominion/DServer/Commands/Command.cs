@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DominionFramework.Commands
+namespace DServer.Commands
 {
 	public class Command
 	{

@@ -1,7 +1,7 @@
 ﻿using System.Net;
-using System.Net.Sockets;
+using DServer.Clients;
 
-namespace DominionFramework.Listeners
+namespace DServer.Listeners
 {
 	public interface IListener
 	{
@@ -15,7 +15,7 @@ namespace DominionFramework.Listeners
 		/// Waits until it receives a TcpClient connection
 		/// </summary>
 		/// <returns>TcpClient connection</returns>
-		TcpClient ListenForClient();
+		ConnectedClient ListenForClient();
 
 		/// <summary>
 		/// Starts the listener

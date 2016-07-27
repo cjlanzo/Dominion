@@ -1,23 +1,24 @@
 ﻿using System;
+using System.Net.Sockets;
+using System.Threading;
 using System.Windows.Forms;
 using DominionClient.Events;
+using DServer.Clients;
 
 namespace DominionClient.Screens
 {
 	public partial class fmGameClient : Form
 	{
 		#region Member Variables
-		private ClientController _controller;
+		private ConnectedClient _client;
 		private fmLobby _lobbyScreen;
 		private fmLogin _loginScreen;
 		#endregion Member Variables
 
 		#region Properties
-		private ClientController Controller => _controller ?? (_controller = new ClientController());
+		private ConnectedClient Client => _client ?? (_client = new ConnectedClient(new TcpClient()));
 		private fmLobby LobbyScreen => _lobbyScreen ?? (_lobbyScreen = new fmLobby());
 		private fmLogin LoginScreen => _loginScreen ?? (_loginScreen = new fmLogin());
-		private string Message { get; set; }
-		private string Username { get; set; }
 		#endregion Properties
 
 		#region Constructors
@@ -40,7 +41,7 @@ namespace DominionClient.Screens
 		/// <param name="e">Event arguments</param>
 		private void btnSend_Click(object sender, EventArgs e)
 		{
-			Controller.SendMessage($"{Username}:Chat:what's up");
+			Client.SendMessage($"{Client.Username}:Chat:what's up");
 		}
 
 		/// <summary>
@@ -53,29 +54,18 @@ namespace DominionClient.Screens
 			LoginScreen.OnLogin += UpdateUsername;
 			LoginScreen.ShowDialog();
 
-			Listener.RunWorkerAsync();
+			Client.Connect();
 
-			Controller.SendMessage($"{Username}:Login");
+			Thread.Sleep(2000);
 
+			//dummy message just to trigger, shoudl be replaced with actual command
+			Client.SendMessage("a");
+
+			LobbyScreen.WaitForStart(Client);
 			LobbyScreen.ShowDialog();
 
 			Focus();
 		}
-
-		//private void ListenForMessages()
-		//{
-		//	Thread thread = new Thread(() =>
-		//	{
-		//		byte[] bytes = new byte[100];
-
-		//		Task<int> bytesReceived = Controller.TcpClient.GetStream().ReadAsync(bytes, 0, bytes.Length);
-
-		//		string message = ConvertBytesToString(bytes, bytesReceived);
-
-		//		ParseMessage(message);
-		//	});
-		//	thread.Start();
-		//}
 
 		/// <summary>
 		/// Updates the username field
@@ -84,75 +74,16 @@ namespace DominionClient.Screens
 		/// <param name="e">Event arguments</param>
 		private void UpdateUsername(object sender, LoginEvent e)
 		{
-			Username = e.Username;
+			Client.Username = e.Username;
 		}
 		#endregion Event Handlers
 
 		#region Helper Methods
-		/// <summary>
-		/// Converts a byte array to a string
-		/// </summary>
-		/// <param name="bytes">Byte array</param>
-		/// <param name="length">Length of the byte array</param>
-		/// <returns>The byte array as a string</returns>
-		private string ConvertBytesToString(byte[] bytes, int length)
-		{
-			string s = "";
-
-			for (int i = 0; i < length; i++)
-			{
-				s += Convert.ToChar(bytes[i]);
-			}
-
-			return s;
-		}
-
-		private void HandleLoginMessage(string player)
-		{
-			LobbyScreen.UpdatePlayersList(player, false);
-		}
-
-		private void ParseMessage()
-		{
-			string[] commands = Message.Split(':');
-
-			switch (commands[1])
-			{
-				case "Action":
-					break;
-				case "Chat":
-					break;
-				case "Login":
-					HandleLoginMessage(commands[0]);
-					break;
-				case "Logout":
-					break;
-				default:
-					Console.WriteLine(@"Invalid message");
-					break;
-			}
-		}
 
 		private void fmGameClient_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			Controller.SendMessage($"{Username}:Logout");
+			//Client.SendMessage("Logout");
 		}
 		#endregion Helper Methods
-
-		//private void Listener_DoWork(object sender, DoWorkEventArgs e)
-		//{
-		//	byte[] bytes = new byte[100];
-
-		//	int bytesReceived = Controller.TcpClient.GetStream().Read(bytes, 0, bytes.Length);
-
-		//	Message = ConvertBytesToString(bytes, bytesReceived);
-
-		//	Listener.ReportProgress(100);
-		//}
-
-		//private void Listener_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-		//{
-		//	ParseMessage();
-		//}
 	}
 }
