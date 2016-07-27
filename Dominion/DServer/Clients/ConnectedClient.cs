@@ -44,17 +44,16 @@ namespace DServer.Clients
 		public void Connect()
 		{
 			TcpClient.Connect("10.0.0.25", Port);
+			SendMessage(Username);
 		}
 
-		public bool Read(out string message)
+		public string Read()
 		{
 			byte[] b = new byte[100];
 
-			int bytesRead = TcpClient.GetStream().Read(b, 0, 100);
+			TcpClient.GetStream().Read(b, 0, 100);
 
-			message = b.ConvertToString();
-
-			return bytesRead > 0;
+			return b.ConvertToString();
 		}
 
 		/// <summary>

@@ -1,20 +1,22 @@
 ﻿using System;
-using System.Net.Sockets;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using DServer.Clients;
 using DServer.Commands;
 using DServer.Listeners;
-using DServer.Utilities;
 
 namespace DServer.Servers
 {
 	public class DominionServer : IDominionServer
 	{
 		#region Member Variables
+		private List<ConnectedClient> _connectedClients;
 		private IListener _listener;
 		#endregion Member Variables
 
 		#region Properties
+		private List<ConnectedClient> ConnectedClients => _connectedClients ?? (_connectedClients = new List<ConnectedClient>());
 		private IListener Listener => _listener ?? (_listener = new Listener());
 		#endregion Properties
 
@@ -31,11 +33,16 @@ namespace DServer.Servers
 		/// <summary>
 		/// Runs the server 
 		/// </summary>
-		/// <param name="gameModel">Game model</param>
 		public void Run()
 		{
 			ConnectedClient client = Listener.ListenForClient();
-			
+
+			Console.WriteLine($"{client.Username} has connected to the server");
+
+			ConnectedClients.Add(client);
+
+			Console.WriteLine($"Connected clients: {ConnectedClients.Count}");
+
 			ManageClient(client);
 		}
 
@@ -56,85 +63,93 @@ namespace DServer.Servers
 		/// Creates a server thread that manages the connection between the client and the server
 		/// </summary>
 		/// <param name="client">The client connection to manage</param>
-		/// <param name="gameModel">Game model</param>
 		private void ManageClient(ConnectedClient client)
 		{
-			//NetworkStream stream = client.TcpClient.GetStream();
-
-			ThreadStart starter = () =>
+			new Thread(() =>
 			{
 				while (true)
 				{
-					//byte[] buffer = new byte[100];
-
-
-					//stream.Read(buffer, 0, buffer.Length);
-					//if (stream.Read(buffer, 0, buffer.Length) == 0)
-					//{
-					//	Console.WriteLine("Closing connection, no bytes received");
-					//	stream.Close();
-					//	client.Close();
-					//	break;
-					//}
-
-					string message;
-					client.Read(out message);
-
-					Command command = new Command(message);
-
-					client.Username = command.Client;
-
-					
-
-					if (command.Action == "Login")
+					try
 					{
-						GameModel gameModel = GameModel.Acquire();
-						//GameModel.ConnectedClients.Add(client);
-						gameModel.ConnectedClients.Add(client);
-						GameModel.Release();
-						Thread.Sleep(1000);
+						string message = client.Read();
 
-						//take this shit out
-						//Console.WriteLine($"Connected clients: {GameModel.ConnectedClients.Count}");
-						gameModel = GameModel.Acquire();
-						Console.WriteLine($"Connected clients: {gameModel.ConnectedClients.Count}");
-						GameModel.Release();
+						//Command command = new Command(message);
+
+						foreach (ConnectedClient recipient in ConnectedClients)
+						{
+							string users = "";
+
+							foreach (ConnectedClient user in ConnectedClients)
+							{
+								users += user.Username;
+
+								if (user != ConnectedClients.Last())
+								{
+									users += ",";
+								}
+							}
+							recipient.SendMessage(users);
+							//connectedClient.SendMessage(message);
+						}
+
 					}
-
-					GameModel gm = GameModel.Acquire();
-					foreach (ConnectedClient connectedClient in gm.ConnectedClients)
-					//foreach (ConnectedClient connectedClient in GameModel.ConnectedClients)
+					catch (Exception)
 					{
-						//connectedClient.TcpClient.GetStream().Write(buffer, 0, buffer.Length);
-						connectedClient.SendMessage(message);
+						break;
 					}
-					GameModel.Release();
-
-					if (command.Action != "Logout")
-					{
-						continue;
-					}
-
-					client.Close();
-					break;
 				}
-			};
-			starter += () =>
-			{
-				GameModel gameModel = GameModel.Acquire();
-				gameModel.ConnectedClients.Remove(client);
-				//GameModel.ConnectedClients.Remove(client);
+
+				client.Close();
+
+				Console.WriteLine($"{client.Username} has disconnected from the server");
+
+				ConnectedClients.Remove(client);
 
 				//take this out later
-				//Console.WriteLine($"Connected clients: {GameModel.ConnectedClients.Count}");
-				Console.WriteLine($"Connected clients: {gameModel.ConnectedClients.Count}");
-
-				GameModel.Release();
-			};
-
-			Thread thread = new Thread(starter) { IsBackground = true };
-			thread.Start();
+				Console.WriteLine($"Connected clients: {ConnectedClients.Count}");
+			}).Start();
 		}
+
+		///// <summary>
+		///// Creates a server thread that manages the connection between the client and the server
+		///// </summary>
+		///// <param name="client">The client connection to manage</param>
+		//private void ManageClient(ConnectedClient client)
+		//{
+		//	ThreadStart starter = () =>
+		//	{
+		//		while (true)
+		//		{
+		//			string message;
+		//			client.Read(out message);
+
+		//			Command command = new Command(message);
+
+		//			foreach (ConnectedClient connectedClient in ConnectedClients)
+		//			{
+		//				connectedClient.SendMessage(message);
+		//			}
+
+		//			if (command.Action != "Logout")
+		//			{
+		//				continue;
+		//			}
+
+		//			client.Close();
+		//			break;
+		//		}
+		//	};
+		//	starter += () =>
+		//	{
+		//		ConnectedClients.Remove(client);
+
+		//		//take this out later
+		//		Console.WriteLine($"Connected clients: {ConnectedClients.Count}");
+		//	};
+
+		//	Thread thread = new Thread(starter) { IsBackground = true };
+		//	thread.Start();
+		//}
 		#endregion Private Methods
 	}
 }

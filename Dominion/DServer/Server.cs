@@ -13,8 +13,6 @@ namespace DServer
 			DominionServer server = new DominionServer();
 			server.Start();
 
-			//GameModel gameModel = GameModel.Instance;
-
 			while (true)
 			{
 				server.Run();

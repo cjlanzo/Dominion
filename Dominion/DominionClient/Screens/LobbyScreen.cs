@@ -102,64 +102,108 @@ namespace DominionClient.Screens
 
 		//}
 
-		public void WaitForStart(TcpClient tcpClient)
+		public void WaitForStart(ConnectedClient client)
 		{
-			byte[] buffer = new byte[100];
+			
 
-			ThreadStart starter = () =>
+			new Thread(() =>
 			{
-
-				NetworkStream stream = tcpClient.GetStream();
-				stream.Read(buffer, 0, buffer.Length);
-			};
-			starter += () =>
-			{
-				Command command = new Command(buffer.ConvertToString());
-
-				switch (command.Action)
+				while (true)
 				{
-					case "Begin":
-						break;
-					case "Login":
-						//ListViewItem[] updatedList = new ListViewItem[GameModel.ConnectedClients.Count];
+					Thread.Sleep(2000);
+					client.SendMessage("a");
 
-						//for (int i = 0; i < GameModel.ConnectedClients.Count; i++)
-						//{
-						//	updatedList[i] = new ListViewItem(new string[]
-						//	{
-						//		GameModel.ConnectedClients[i].Username,
-						//		GameModel.ConnectedClients[i].Ready ? "Ready" : "Not Ready"
-						//	});
-						//}
-						//lvwPlayers.Items.
-						ControlInvoke(lvwPlayers, () =>
+					Thread.Sleep(10000);
+
+					string message = client.Read();
+
+					ControlInvoke(lvwPlayers, () =>
+					{
+						lvwPlayers.Items.Clear();
+						string[] users = message.Split(',');
+						foreach (string user in users)
 						{
-							lvwPlayers.Items.Clear();
-							GameModel gameModel = GameModel.Acquire();
-							foreach (ConnectedClient connectedClient in gameModel.ConnectedClients)
+							lvwPlayers.Items.Add(new ListViewItem(new string[]
 							{
-								lvwPlayers.Items.Add(new ListViewItem(new string[]
-								{
-									connectedClient.Username,
-									connectedClient.Ready ? "Ready" : "Not ready"
-								}));
-							}
-							GameModel.Release();
-						});
-						break;
-					case "Logout":
-						RemovePlayer(command.Client);
-						break;
-					case "Ready":
-						UpdatePlayer(command.Client, true);
-						break;
-					default:
-						Console.WriteLine(@"Invalid command");
-						break;
+							user,
+							"Not ready"
+							}));
+						}
+					});
+
 				}
-			};
-			Thread thread = new Thread(starter) { IsBackground = true };
-			thread.Start();
+			}).Start();
+
+			//ThreadStart starter = () =>
+			//{
+
+			//	NetworkStream stream = tcpClient.GetStream();
+			//	stream.Read(buffer, 0, buffer.Length);
+			//};
+			//starter += () =>
+			//{
+			//	ControlInvoke(lvwPlayers, () =>
+			//	{
+			//		lvwPlayers.Items.Clear();
+			//		string[] users = buffer.ConvertToString().Split(',');
+			//		foreach (string user in users)
+			//		{
+			//			lvwPlayers.Items.Add(new ListViewItem(new string[]
+			//			{
+			//				user,
+			//				"Not ready"
+			//			}));
+			//		}
+			//	});
+
+				//uncomment this and integrate
+
+				//Command command = new Command(buffer.ConvertToString());
+
+				//switch (command.Action)
+				//{
+				//	case "Begin":
+				//		break;
+				//	case "Login":
+				//		//ListViewItem[] updatedList = new ListViewItem[GameModel.ConnectedClients.Count];
+
+				//		//for (int i = 0; i < GameModel.ConnectedClients.Count; i++)
+				//		//{
+				//		//	updatedList[i] = new ListViewItem(new string[]
+				//		//	{
+				//		//		GameModel.ConnectedClients[i].Username,
+				//		//		GameModel.ConnectedClients[i].Ready ? "Ready" : "Not Ready"
+				//		//	});
+				//		//}
+				//		//lvwPlayers.Items.
+				//		ControlInvoke(lvwPlayers, () =>
+				//		{
+				//			lvwPlayers.Items.Clear();
+				//			GameModel gameModel = GameModel.Acquire();
+				//			foreach (ConnectedClient connectedClient in gameModel.ConnectedClients)
+				//			{
+				//				lvwPlayers.Items.Add(new ListViewItem(new string[]
+				//				{
+				//					connectedClient.Username,
+				//					connectedClient.Ready ? "Ready" : "Not ready"
+				//				}));
+				//			}
+				//			GameModel.Release();
+				//		});
+				//		break;
+				//	case "Logout":
+				//		RemovePlayer(command.Client);
+				//		break;
+				//	case "Ready":
+				//		UpdatePlayer(command.Client, true);
+				//		break;
+				//	default:
+				//		Console.WriteLine(@"Invalid command");
+				//		break;
+				//}
+			//};
+			//Thread thread = new Thread(starter) { IsBackground = true };
+			//thread.Start();
 
 		}
 

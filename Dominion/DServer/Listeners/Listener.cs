@@ -40,6 +40,7 @@ namespace DServer.Listeners
 		{
 			TcpClient client = TcpListener.AcceptTcpClient();
 			ConnectedClient connectedClient = new ConnectedClient(client);
+			connectedClient.Username = connectedClient.Read();
 
 			//Logger.LogMessage($"{client} has connected to the server");
 
