@@ -39,12 +39,7 @@ namespace DServer.Listeners
 		public ConnectedClient ListenForClient()
 		{
 			TcpClient client = TcpListener.AcceptTcpClient();
-			ConnectedClient connectedClient = new ConnectedClient(client);
-			connectedClient.Username = connectedClient.Read();
-
-			//Logger.LogMessage($"{client} has connected to the server");
-
-			return connectedClient;
+			return new ConnectedClient(client);
 		}
 
 		/// <summary>
@@ -53,8 +48,6 @@ namespace DServer.Listeners
 		public void Start()
 		{
 			TcpListener.Start();
-
-			//Logger.LogMessage("Server has started running");
 		}
 		#endregion Public Methods
 

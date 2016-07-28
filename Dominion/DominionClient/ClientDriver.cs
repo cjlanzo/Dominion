@@ -12,7 +12,7 @@ namespace DominionClient
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new fmGameClient());
+			Application.Run(new fmMainScreen());
 		}
 		#endregion Main
 	}

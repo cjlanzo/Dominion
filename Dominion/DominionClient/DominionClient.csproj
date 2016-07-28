@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="ClientController.cs" />
     <Compile Include="Events\LoginEvent.cs" />
+    <Compile Include="LobbyController.cs" />
     <Compile Include="Screens\GameClient.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -71,6 +72,12 @@
       <DependentUpon>LoginScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Screens\MainScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\MainScreen.Designer.cs">
+      <DependentUpon>MainScreen.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Screens\GameClient.resx">
       <DependentUpon>GameClient.cs</DependentUpon>
     </EmbeddedResource>
@@ -89,6 +96,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Screens\MainScreen.resx">
+      <DependentUpon>MainScreen.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -103,6 +113,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DominionFramework\DominionFramework.csproj">
+      <Project>{a05dbc9e-4ee0-449f-8cc6-bdb539e29490}</Project>
+      <Name>DominionFramework</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DServer\DServer.csproj">
       <Project>{e96f4855-f20a-47ec-986a-b3e4ea20040d}</Project>
       <Name>DServer</Name>

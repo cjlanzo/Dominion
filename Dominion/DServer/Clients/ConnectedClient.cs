@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Sockets;
 using System.Text;
+using DominionFramework.Commands;
 using DServer.Utilities;
 
 namespace DServer.Clients
@@ -44,16 +45,24 @@ namespace DServer.Clients
 		public void Connect()
 		{
 			TcpClient.Connect("10.0.0.25", Port);
-			SendMessage(Username);
+			SendMessage($"{Username}:{ActionType.Connected}");
 		}
 
 		public string Read()
 		{
-			byte[] b = new byte[100];
+			try
+			{
+				byte[] b = new byte[100];
 
-			TcpClient.GetStream().Read(b, 0, 100);
+				TcpClient.GetStream().Read(b, 0, 100);
 
-			return b.ConvertToString();
+				return b.ConvertToString();
+			}
+			catch (Exception)
+			{
+				return "Terminated";
+			}
+			
 		}
 
 		/// <summary>

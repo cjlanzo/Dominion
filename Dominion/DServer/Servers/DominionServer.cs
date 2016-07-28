@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using DominionFramework.Commands;
 using DServer.Clients;
-using DServer.Commands;
 using DServer.Listeners;
 
 namespace DServer.Servers
@@ -12,11 +12,13 @@ namespace DServer.Servers
 	{
 		#region Member Variables
 		private List<ConnectedClient> _connectedClients;
+		private GameController _gameController;
 		private IListener _listener;
 		#endregion Member Variables
 
 		#region Properties
 		private List<ConnectedClient> ConnectedClients => _connectedClients ?? (_connectedClients = new List<ConnectedClient>());
+		private GameController GameController => _gameController ?? (_gameController = new GameController());
 		private IListener Listener => _listener ?? (_listener = new Listener());
 		#endregion Properties
 
@@ -37,9 +39,15 @@ namespace DServer.Servers
 		{
 			ConnectedClient client = Listener.ListenForClient();
 
+			string input = client.Read();
+
+			Command command = GameController.HandleCommand(new Command(input));
+			client.Username = command.Username;
+
 			Console.WriteLine($"{client.Username} has connected to the server");
 
 			ConnectedClients.Add(client);
+			BroadcastMessage(command);
 
 			Console.WriteLine($"Connected clients: {ConnectedClients.Count}");
 
@@ -59,6 +67,14 @@ namespace DServer.Servers
 
 		#region Private Methods
 
+		private void BroadcastMessage(Command command)
+		{
+			foreach (ConnectedClient client in ConnectedClients)
+			{
+				client.SendMessage(command.ToString());
+			}
+		}
+
 		/// <summary>
 		/// Creates a server thread that manages the connection between the client and the server
 		/// </summary>
@@ -69,31 +85,15 @@ namespace DServer.Servers
 			{
 				while (true)
 				{
-					try
-					{
-						string message = client.Read();
+					string input = client.Read();
 
-						//Command command = new Command(message);
+					Command inputCommand = new Command(input);
 
-						foreach (ConnectedClient recipient in ConnectedClients)
-						{
-							string users = "";
+					Command outputCommand = GameController.HandleCommand(inputCommand);
 
-							foreach (ConnectedClient user in ConnectedClients)
-							{
-								users += user.Username;
+					BroadcastMessage(outputCommand);
 
-								if (user != ConnectedClients.Last())
-								{
-									users += ",";
-								}
-							}
-							recipient.SendMessage(users);
-							//connectedClient.SendMessage(message);
-						}
-
-					}
-					catch (Exception)
+					if (inputCommand.Action == ActionType.Disconnected)
 					{
 						break;
 					}
@@ -109,47 +109,6 @@ namespace DServer.Servers
 				Console.WriteLine($"Connected clients: {ConnectedClients.Count}");
 			}).Start();
 		}
-
-		///// <summary>
-		///// Creates a server thread that manages the connection between the client and the server
-		///// </summary>
-		///// <param name="client">The client connection to manage</param>
-		//private void ManageClient(ConnectedClient client)
-		//{
-		//	ThreadStart starter = () =>
-		//	{
-		//		while (true)
-		//		{
-		//			string message;
-		//			client.Read(out message);
-
-		//			Command command = new Command(message);
-
-		//			foreach (ConnectedClient connectedClient in ConnectedClients)
-		//			{
-		//				connectedClient.SendMessage(message);
-		//			}
-
-		//			if (command.Action != "Logout")
-		//			{
-		//				continue;
-		//			}
-
-		//			client.Close();
-		//			break;
-		//		}
-		//	};
-		//	starter += () =>
-		//	{
-		//		ConnectedClients.Remove(client);
-
-		//		//take this out later
-		//		Console.WriteLine($"Connected clients: {ConnectedClients.Count}");
-		//	};
-
-		//	Thread thread = new Thread(starter) { IsBackground = true };
-		//	thread.Start();
-		//}
 		#endregion Private Methods
 	}
 }

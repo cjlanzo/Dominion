@@ -1,109 +1,84 @@
-﻿//using System;
-//using System.IO;
-//using System.Net.Sockets;
-//using System.Text;
-//using System.Threading;
-//using DServer.Clients;
+﻿using System.Net;
+using System.Net.Sockets;
+using System.Windows.Forms;
+using DominionClient.Screens;
+using DominionFramework.Commands;
+using DServer.Clients;
 
-//namespace DominionClient
-//{
-//	public class ClientController
-//	{
-//		#region Constants
-//		private const int Port = 8001;
-//		#endregion Constants
+namespace DominionClient
+{
+	public class ClientController
+	{
+		#region Member Variables
+		private ConnectedClient _client;
+		private fmGameClient _gameClient;
+		private fmLobby _lobbyScreen;
+		private fmLogin _loginScreen;
+		#endregion Member Varibles
 
-//		#region Member Variables
-//		private ASCIIEncoding _encoder;
-//		//private TcpClient _tcpClient;
-//		private ConnectedClient _client;
-//		#endregion Member Varibles
+		#region Properties
+		private ConnectedClient Client => _client ?? (_client = new ConnectedClient(new TcpClient()));
+		private fmGameClient GameClient => _gameClient ?? (_gameClient = new fmGameClient(Client));
+		private fmLobby LobbyScreen => _lobbyScreen ?? (_lobbyScreen = new fmLobby(Client));
+		private fmLogin LoginScreen => _loginScreen ?? (_loginScreen = new fmLogin());
+		#endregion Properties
 
-//		#region Properties
-//		public ASCIIEncoding Encoder => _encoder ?? (_encoder = new ASCIIEncoding());
-//		//public TcpClient TcpClient => _tcpClient ?? (_tcpClient = new TcpClient());
-//		public ConnectedClient Client => _client ?? (_client = new ConnectedClient(new TcpClient()));
-//		#endregion Properties
+		#region Constructors
 
-//		#region Constructors
-//		/// <summary>
-//		/// Constructs an instance of a client controller
-//		/// </summary>
-//		public ClientController()
-//		{
-//			TcpClient.Connect("10.0.0.25", Port);
-//		}
-//		#endregion Constructors
+		#endregion Constructors
 
-//		#region Public Methods
-//		/// <summary>
-//		/// Sends a message from the client to the server
-//		/// </summary>
-//		/// <param name="message">Message to send to the server</param>
-//		public void SendMessage(string message)
-//		{
-//			try
-//			{
-//				NetworkStream stream = TcpClient.GetStream();
+		#region Public Methods
 
-//				byte[] bytes = Encoder.GetBytes(message);
+		public Command HandleCommand(Command command)
+		{
+			switch (command.Action)
+			{
+				case ActionType.Connected:
+					return HandleConnected(command);
+				//case ActionType.Disconnected:
+				//	return HandleDisconnected(command);
+				default:
+					return null;
+			}
+		}
 
-//				stream.Write(bytes, 0, bytes.Length);
-//			}
-//			catch (Exception e)
-//			{
-//				Console.WriteLine(e.StackTrace);
-//			}
-//		}
+		public void Run()
+		{
+			//LoginScreen.OnLogin += UpdateUsername;
+			
+			LoginScreen.ShowDialog();
+			Client.Username = LoginScreen.Username;
 
-//		public void ReceiveBroadcast()
-//		{
-//			//ThreadStart starter = () =>
-//			//{
-//			//	while (true)
-//			//	{
-//			//		byte[] buffer = new byte[100];
+			Client.Connect();
 
-//			//		NetworkStream stream = TcpClient.GetStream();
+			//separates sending username from first command
+			//Thread.Sleep(2000);
 
-//			//		if (stream.Read(buffer, 0, buffer.Length) == 0)
-//			//		{
-//			//			Console.WriteLine(@"Closing connection, no bytes received");
-//			//			stream.Close();
-//			//			TcpClient.Close();
-//			//			break;
-//			//		}
+			LobbyScreen.WaitForStart(Client);
+			LobbyScreen.ShowDialog();
 
-//			//		Command command = new Command(buffer.ConvertToString());
-					
-//			//		Console.WriteLine(command.ToString());
+			GameClient.ShowDialog();
 
-//			//		if (command.Action != "Quit")
-//			//		{
-//			//			continue;
-//			//		}
+			
+		}
+		#endregion Public methods
 
-//			//		stream.Close();
-//			//		TcpClient.Close();
-//			//		break;
-//			//	}
-//			//};
-//			//starter += () =>
-//			//{
-//			//	ConnectedClients.Remove(connectedClient);
+		#region Private Methods
 
-//			//	//take this out later
-//			//	Console.WriteLine("Connected clients:");
-
-//			//	foreach (ConnectedClient cclient in ConnectedClients)
-//			//	{
-//			//		Console.WriteLine(cclient.Username);
-//			//	}
-//			//};
-
-//			//Thread thread = new Thread(starter) { IsBackground = true };
-//			//thread.Start();
-//		}
-//		#endregion Public methods
-//	}
-//}
+		private Command HandleConnected(Command command)
+		{
+			lvwPlayers.Items.Clear();
+			string[] commands = message.Split(':');
+			string[] users = commands[2].Split(',');
+			foreach (string user in users)
+			{
+				lvwPlayers.Items.Add(new ListViewItem(new string[]
+				{
+							user,
+							"Not ready"
+				}));
+			}
+		}
+		#endregion Private Methods
+	}
+}

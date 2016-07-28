@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Net.Sockets;
-using System.Threading;
 using System.Windows.Forms;
 using DominionClient.Events;
+using DominionFramework.Commands;
 using DServer.Clients;
 
 namespace DominionClient.Screens
@@ -10,25 +9,21 @@ namespace DominionClient.Screens
 	public partial class fmGameClient : Form
 	{
 		#region Member Variables
-		private ConnectedClient _client;
-		private fmLobby _lobbyScreen;
-		private fmLogin _loginScreen;
 		#endregion Member Variables
 
 		#region Properties
-		private ConnectedClient Client => _client ?? (_client = new ConnectedClient(new TcpClient()));
-		private fmLobby LobbyScreen => _lobbyScreen ?? (_lobbyScreen = new fmLobby());
-		private fmLogin LoginScreen => _loginScreen ?? (_loginScreen = new fmLogin());
+		private readonly ConnectedClient _client;
 		#endregion Properties
 
 		#region Constructors
 		/// <summary>
 		/// Constructs an instance of a Game Client
 		/// </summary>
-		public fmGameClient()
+		public fmGameClient(ConnectedClient client)
 		{
 			InitializeComponent();
 
+			_client = client;
 			FormClosing += fmGameClient_FormClosing;
 		}
 		#endregion Constructors
@@ -41,7 +36,7 @@ namespace DominionClient.Screens
 		/// <param name="e">Event arguments</param>
 		private void btnSend_Click(object sender, EventArgs e)
 		{
-			Client.SendMessage($"{Client.Username}:Chat:what's up");
+			_client.SendMessage($"{_client.Username}:{ActionType.Chat}:what's up");
 		}
 
 		/// <summary>
@@ -51,20 +46,7 @@ namespace DominionClient.Screens
 		/// <param name="e">Event arguments</param>
 		private void fmGameClient_Load(object sender, EventArgs e)
 		{
-			LoginScreen.OnLogin += UpdateUsername;
-			LoginScreen.ShowDialog();
-
-			Client.Connect();
-
-			Thread.Sleep(2000);
-
-			//dummy message just to trigger, shoudl be replaced with actual command
-			Client.SendMessage("a");
-
-			LobbyScreen.WaitForStart(Client);
-			LobbyScreen.ShowDialog();
-
-			Focus();
+			
 		}
 
 		/// <summary>
@@ -74,7 +56,7 @@ namespace DominionClient.Screens
 		/// <param name="e">Event arguments</param>
 		private void UpdateUsername(object sender, LoginEvent e)
 		{
-			Client.Username = e.Username;
+			_client.Username = e.Username;
 		}
 		#endregion Event Handlers
 
@@ -82,7 +64,7 @@ namespace DominionClient.Screens
 
 		private void fmGameClient_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			//Client.SendMessage("Logout");
+			_client.SendMessage($"{_client.Username}:{ActionType.Disconnected}");
 		}
 		#endregion Helper Methods
 	}

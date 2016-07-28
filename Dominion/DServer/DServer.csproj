@@ -44,7 +44,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clients\ConnectedClient.cs" />
-    <Compile Include="Commands\Command.cs" />
     <Compile Include="GameController.cs" />
     <Compile Include="GameModel.cs" />
     <Compile Include="Listeners\IListener.cs" />
@@ -59,6 +58,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DominionFramework\DominionFramework.csproj">
+      <Project>{a05dbc9e-4ee0-449f-8cc6-bdb539e29490}</Project>
+      <Name>DominionFramework</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
