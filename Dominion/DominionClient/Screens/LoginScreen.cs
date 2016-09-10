@@ -7,7 +7,7 @@ namespace DominionClient.Screens
 	public partial class fmLogin : Form
 	{
 		#region Events
-		public delegate void LoginHandler(object sender, LoginEvent e);
+		//public delegate void LoginHandler(object sender, LoginEvent e);
 		//public event LoginHandler OnLogin;
 		#endregion Events
 

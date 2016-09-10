@@ -5,12 +5,12 @@ namespace DServer
 	public class GameModel
 	{
 		#region Member Variables
-		private List<string> _players;
+		private List<Player> _players;
 
 		#endregion Member Variables
 
 		#region Properties
-		public List<string> Players => _players ?? (_players = new List<string>());
+		public List<Player> Players => _players ?? (_players = new List<Player>());
 		#endregion Properties
 
 		#region Constructors

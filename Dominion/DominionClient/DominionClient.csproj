@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="ClientController.cs" />
     <Compile Include="Events\LoginEvent.cs" />
+    <Compile Include="Events\UserConnectedEvent.cs" />
     <Compile Include="LobbyController.cs" />
     <Compile Include="Screens\GameClient.cs">
       <SubType>Form</SubType>

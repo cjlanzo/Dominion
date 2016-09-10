@@ -29,7 +29,7 @@ namespace DServer
 				case ActionType.Disconnected:
 					return HandleDisconnected(command);
 				case ActionType.Ready:
-					return command;
+					return HandleReady(command);
 				default:
 					return null;
 			}
@@ -45,14 +45,33 @@ namespace DServer
 
 		private Command HandleConnected(Command command)
 		{
-			GameModel.Players.Add(command.Username);
+			GameModel.Players.Add(new Player(command.Username));
 
 			return new Command($"{command.Username}:{command.Action}:{GetPlayers()}");
 		}
 
 		private Command HandleDisconnected(Command command)
 		{
-			GameModel.Players.Remove(command.Username);
+			for (int i = 0; i < GameModel.Players.Count; i++)
+			{
+				if (GameModel.Players[i].Username == command.Username)
+				{
+					GameModel.Players.RemoveAt(i);
+				}
+			}
+
+			return new Command($"{command.Username}:{command.Action}:{GetPlayers()}");
+		}
+
+		private Command HandleReady(Command command)
+		{
+			for (int i = 0; i < GameModel.Players.Count; i++)
+			{
+				if (GameModel.Players[i].Username == command.Username)
+				{
+					GameModel.Players[i].Ready = true;
+				}
+			}
 
 			return new Command($"{command.Username}:{command.Action}:{GetPlayers()}");
 		}
@@ -64,13 +83,13 @@ namespace DServer
 		{
 			string players = "";
 
-			foreach (string player in GameModel.Players)
+			foreach (Player player in GameModel.Players)
 			{
-				players += player;
+				players += $"{player.Username},{player.Ready}";
 
 				if (player != GameModel.Players.Last())
 				{
-					players += ",";
+					players += ";";
 				}
 			}
 

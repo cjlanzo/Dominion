@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Forms;
+using DominionClient.Events;
 using DominionFramework.Commands;
+using DServer;
 using DServer.Clients;
 
 namespace DominionClient.Screens
@@ -9,7 +12,7 @@ namespace DominionClient.Screens
 	public partial class fmLobby : Form
 	{
 		#region Delegates
-		private delegate void ControlInvokeDelegate();
+		
 		#endregion Delegates
 
 		#region Member Variables
@@ -25,11 +28,13 @@ namespace DominionClient.Screens
 		/// <summary>
 		/// Constructs an instance of a Lobby
 		/// </summary>
-		public fmLobby(ConnectedClient client)
+		public fmLobby()
 		{
 			InitializeComponent();
 
-			_client = client;
+			//UserConnectedEvent += UpdatePlayers()
+
+			//_client = client;
 		}
 		#endregion Constructors
 
@@ -41,7 +46,7 @@ namespace DominionClient.Screens
 		/// <param name="e">Event arguments</param>
 		private void btnReady_Click(object sender, EventArgs e)
 		{
-			_client.SendMessage($"{_client.Username}:{}");
+			_client.SendMessage($"{_client.Username}:{ActionType.Ready}");
 		}
 
 		/// <summary>
@@ -54,65 +59,29 @@ namespace DominionClient.Screens
 
 		}
 
-		public void WaitForStart(ConnectedClient client, Action function)
+		
+
+		
+
+		
+
+		public void UpdatePlayers(List<Player> players)
 		{
-			Thread thread = new Thread(() =>
-			{
-				while (true)
-				{
-					string message = client.Read();
-
-					if (message == "Terminated")
-					{
-						break;
-					}
-
-					Command command = new Command(message);
-
-					ControlInvoke(lvwPlayers, () =>
-					{
-						//need to be able to call HandleCommand
-						UpdatePlayers(command);
-					});
-
-				}
-			});
-			thread.Start();
-		}
-
-		private void ControlInvoke(Control control, Action function)
-		{
-			if (control.IsDisposed || control.Disposing)
-			{
-				return;
-			}
-
-			if (control.InvokeRequired)
-			{
-				control.Invoke(new ControlInvokeDelegate(() => ControlInvoke(control, function)));
-				return;
-			}
-
-			function();
-		}
-
-		private void UpdatePlayers(Command command)
-		{
-			if (command.Message == null)
+			if (players == null)
 			{
 				return;
 			}
 
 			lvwPlayers.Items.Clear();
 
-			string[] users = command.Message.Split(',');
+			
 
-			foreach (string user in users)
+			foreach (Player player in players)
 			{
 				lvwPlayers.Items.Add(new ListViewItem(new string[]
 				{
-					user,
-					"Not ready"
+					player.Username,
+					player.Ready ? "Ready" : "Not Ready"
 				}));
 			}
 		}
