@@ -44,6 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clients\ConnectedClient.cs" />
+    <Compile Include="Commands\Command.cs" />
+    <Compile Include="Commands\GameData.cs" />
+    <Compile Include="Commands\GameInfo.cs" />
     <Compile Include="GameController.cs" />
     <Compile Include="GameModel.cs" />
     <Compile Include="Listeners\IListener.cs" />

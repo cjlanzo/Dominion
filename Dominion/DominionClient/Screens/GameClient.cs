@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
 using DominionClient.Events;
-using DominionFramework.Commands;
 using DServer.Clients;
+using DServer.Commands;
 
 namespace DominionClient.Screens
 {
@@ -36,7 +36,7 @@ namespace DominionClient.Screens
 		/// <param name="e">Event arguments</param>
 		private void btnSend_Click(object sender, EventArgs e)
 		{
-			_client.SendMessage($"{_client.Username}:{ActionType.Chat}:what's up");
+			//_client.SendCommand($"{_client.Username}:{ActionType.Chat}:what's up");
 		}
 
 		/// <summary>
@@ -64,7 +64,9 @@ namespace DominionClient.Screens
 
 		private void fmGameClient_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			_client.SendMessage($"{_client.Username}:{ActionType.Disconnected}");
+			//_client.SendCommand($"{_client.Username}:{ActionType.Disconnected}");
+			_client.SendCommand(new Command(_client.Username, ActionType.Disconnected));
+
 		}
 		#endregion Helper Methods
 	}

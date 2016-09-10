@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
-using DominionFramework.Commands;
 using DServer.Clients;
+using DServer.Commands;
 using DServer.Listeners;
 
 namespace DServer.Servers
@@ -27,7 +28,7 @@ namespace DServer.Servers
 		/// Broadcasts a message to all connected clients
 		/// </summary>
 		/// <param name="message">Message to broadcast</param>
-		public void BroadcastMessage(string message)
+		public void SendGameInfo(string message)
 		{
 			//To do
 		}
@@ -39,15 +40,18 @@ namespace DServer.Servers
 		{
 			ConnectedClient client = Listener.ListenForClient();
 
-			string input = client.Read();
+			//string input = client.ReadCommand();
+			Command command = (Command)new BinaryFormatter().Deserialize(client.TcpClient.GetStream());
 
-			Command command = GameController.HandleCommand(new Command(input));
+			//Command command = GameController.HandleCommand(new Command(input));
 			client.Username = command.Username;
 
 			Console.WriteLine($"{client.Username} has connected to the server");
 
 			ConnectedClients.Add(client);
-			BroadcastMessage(command);
+
+			GameInfo gameInfo = GameController.HandleCommand(command);
+			SendGameInfo(gameInfo);
 
 			Console.WriteLine($"Connected clients: {ConnectedClients.Count}");
 
@@ -67,11 +71,11 @@ namespace DServer.Servers
 
 		#region Private Methods
 
-		private void BroadcastMessage(Command command)
+		private void SendGameInfo(GameInfo gameInfo)
 		{
 			foreach (ConnectedClient client in ConnectedClients)
 			{
-				client.SendMessage(command.ToString());
+				client.SendGameInfo(gameInfo);
 			}
 		}
 
@@ -85,15 +89,15 @@ namespace DServer.Servers
 			{
 				while (true)
 				{
-					string input = client.Read();
+					Command command = (Command)new BinaryFormatter().Deserialize(client.TcpClient.GetStream());
 
-					Command inputCommand = new Command(input);
+					//Console.WriteLine($"{command.Username}, {command.Action}");
 
-					Command outputCommand = GameController.HandleCommand(inputCommand);
+					GameInfo gameInfo = GameController.HandleCommand(command);
 
-					BroadcastMessage(outputCommand);
+					SendGameInfo(gameInfo);
 
-					if (inputCommand.Action == ActionType.Disconnected)
+					if (command.Action == ActionType.Disconnected)
 					{
 						break;
 					}

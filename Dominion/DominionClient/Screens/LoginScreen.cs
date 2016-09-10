@@ -7,13 +7,12 @@ namespace DominionClient.Screens
 	public partial class fmLogin : Form
 	{
 		#region Events
-		//public delegate void LoginHandler(object sender, LoginEvent e);
-		//public event LoginHandler OnLogin;
+		public event LoginHandler OnLogin;
 		#endregion Events
 
-		#region Properties
-		public string Username { get; set; }
-		#endregion Properties
+		#region Delegates
+		public delegate void LoginHandler(object sender, LoginEvent e);
+		#endregion Delegates
 
 		#region Constructors
 		/// <summary>
@@ -33,16 +32,14 @@ namespace DominionClient.Screens
 		/// <param name="e">Event arguments</param>
 		private void btnLogin_Click(object sender, EventArgs e)
 		{
-			//if (OnLogin == null)
-			//{
-			//	return;
-			//}
+			if (OnLogin == null)
+			{
+				return;
+			}
 
-			Username = rtfUsername.Text;
-			DialogResult = DialogResult.OK;
-			//LoginEvent loginEvent = new LoginEvent(rtfUsername.Text);
+			LoginEvent loginEvent = new LoginEvent(rtfUsername.Text);
 
-			//OnLogin(this, loginEvent);
+			OnLogin(this, loginEvent);
 			Close();
 		}
 
@@ -55,8 +52,6 @@ namespace DominionClient.Screens
 		{
 
 		}
-
-
 		#endregion Event Handlers
 	}
 }

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Forms;
 using DominionClient.Events;
-using DominionFramework.Commands;
 using DServer;
 using DServer.Clients;
+using DServer.Commands;
 
 namespace DominionClient.Screens
 {
@@ -46,7 +46,9 @@ namespace DominionClient.Screens
 		/// <param name="e">Event arguments</param>
 		private void btnReady_Click(object sender, EventArgs e)
 		{
-			_client.SendMessage($"{_client.Username}:{ActionType.Ready}");
+			//_client.SendCommand($"{_client.Username}:{ActionType.Ready}");
+			_client.SendCommand(new Command(_client.Username, ActionType.Ready));
+
 		}
 
 		/// <summary>
@@ -58,6 +60,11 @@ namespace DominionClient.Screens
 		{
 
 		}
+
+		//public void UpdatePlayers(List<string> users)
+		//{
+			
+		//}
 
 		
 

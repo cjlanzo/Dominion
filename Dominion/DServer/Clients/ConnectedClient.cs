@@ -1,7 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Net.Sockets;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-using DominionFramework.Commands;
+using DServer.Commands;
 using DServer.Utilities;
 
 namespace DServer.Clients
@@ -45,37 +47,51 @@ namespace DServer.Clients
 		public void Connect()
 		{
 			TcpClient.Connect("10.0.0.25", Port);
-			SendMessage($"{Username}:{ActionType.Connected}");
+			SendCommand(new Command(Username, ActionType.Connected));
+
 		}
 
-		public string Read()
+		public Command ReadCommand()
 		{
 			try
 			{
-				byte[] b = new byte[100];
-
-				TcpClient.GetStream().Read(b, 0, 100);
-
-				return b.ConvertToString();
+				return (Command)new BinaryFormatter().Deserialize(TcpClient.GetStream());
 			}
 			catch (Exception)
 			{
-				return "Terminated";
+				return null;
 			}
-			
 		}
 
-		/// <summary>
-		/// Sends a message from the client to the server
-		/// </summary>
-		/// <param name="message">Message to send to the server</param>
-		public void SendMessage(string message)
+		public GameInfo ReadGameInfo()
 		{
 			try
 			{
-				byte[] bytes = Encoder.GetBytes(message);
+				return (GameInfo)new BinaryFormatter().Deserialize(TcpClient.GetStream());
+			}
+			catch (Exception)
+			{
+				return null;
+			}
+		}
 
-				TcpClient.GetStream().Write(bytes, 0, bytes.Length);
+		public void SendCommand(Command command)
+		{
+			try
+			{
+				new BinaryFormatter().Serialize(TcpClient.GetStream(), command);
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.StackTrace);
+			}
+		}
+
+		public void SendGameInfo(GameInfo gameInfo)
+		{
+			try
+			{
+				new BinaryFormatter().Serialize(TcpClient.GetStream(), gameInfo);
 			}
 			catch (Exception e)
 			{
@@ -83,5 +99,9 @@ namespace DServer.Clients
 			}
 		}
 		#endregion Public Methods
+
+		#region Private Methods
+
+		#endregion Private Methods
 	}
 }

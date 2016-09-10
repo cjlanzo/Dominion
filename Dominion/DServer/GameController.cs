@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using DominionFramework.Commands;
+using DServer.Commands;
 
 namespace DServer
 {
@@ -17,19 +17,16 @@ namespace DServer
 
 		#region Public Methods
 
-		public Command HandleCommand(Command command)
+		public GameInfo HandleCommand(Command command)
 		{
 			switch (command.Action)
 			{
-				case ActionType.Chat:
-					HandleChat(command);
-					return command;
 				case ActionType.Connected:
 					return HandleConnected(command);
 				case ActionType.Disconnected:
 					return HandleDisconnected(command);
-				case ActionType.Ready:
-					return HandleReady(command);
+				//case ActionType.Ready:
+				//	return HandleReady(command);
 				default:
 					return null;
 			}
@@ -38,19 +35,22 @@ namespace DServer
 
 		#region Private Methods
 
-		private void HandleChat(Command command)
-		{
-			Console.WriteLine($"{command.Username} sent message: {command.Message}");
-		}
-
-		private Command HandleConnected(Command command)
+		private GameInfo HandleConnected(Command command)
 		{
 			GameModel.Players.Add(new Player(command.Username));
 
-			return new Command($"{command.Username}:{command.Action}:{GetPlayers()}");
+			GameData gameData = new GameData();
+			gameData.Players = GameModel.Players;
+
+			GameInfo gameInfo = new GameInfo();
+			gameInfo.Command = command;
+			gameInfo.GameData = gameData;
+
+			return gameInfo;
+
 		}
 
-		private Command HandleDisconnected(Command command)
+		private GameInfo HandleDisconnected(Command command)
 		{
 			for (int i = 0; i < GameModel.Players.Count; i++)
 			{
@@ -60,41 +60,32 @@ namespace DServer
 				}
 			}
 
-			return new Command($"{command.Username}:{command.Action}:{GetPlayers()}");
+			GameData gameData = new GameData();
+			gameData.Players = GameModel.Players;
+
+			GameInfo gameInfo = new GameInfo();
+			gameInfo.Command = command;
+			gameInfo.GameData = gameData;
+
+			return gameInfo;
 		}
 
-		private Command HandleReady(Command command)
-		{
-			for (int i = 0; i < GameModel.Players.Count; i++)
-			{
-				if (GameModel.Players[i].Username == command.Username)
-				{
-					GameModel.Players[i].Ready = true;
-				}
-			}
+		//private Command HandleReady(Command command)
+		//{
+		//	for (int i = 0; i < GameModel.Players.Count; i++)
+		//	{
+		//		if (GameModel.Players[i].Username == command.Username)
+		//		{
+		//			GameModel.Players[i].Ready = true;
+		//		}
+		//	}
 
-			return new Command($"{command.Username}:{command.Action}:{GetPlayers()}");
-		}
-		#endregion Private Methods
+		//	return new Command($"{command.Username}:{command.Action}:{GetPlayers()}");
+		//}
+		//#endregion Private Methods
 
-		#region Helper Methods
+		//#region Helper Methods
 
-		private string GetPlayers()
-		{
-			string players = "";
-
-			foreach (Player player in GameModel.Players)
-			{
-				players += $"{player.Username},{player.Ready}";
-
-				if (player != GameModel.Players.Last())
-				{
-					players += ";";
-				}
-			}
-
-			return players;
-		}
 		#endregion Helper Methods
 	}
 }

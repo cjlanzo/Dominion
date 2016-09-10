@@ -1,5 +1,8 @@
-﻿namespace DServer
+﻿using System;
+
+namespace DServer
 {
+	[Serializable]
 	public class Player
 	{
 		#region Properties
